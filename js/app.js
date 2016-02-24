@@ -29,6 +29,23 @@ var showQuestion = function (question) {
     );
 
     return result;
+<<<<<<< HEAD
+=======
+};
+
+var showAnswerers = function (answerers) {
+    console.log(answerers);
+    var result = $('.templates .answerers').clone();
+
+    var username = result.find('.username-text a')
+        .attr('href', answerers.user.link)
+        .text(answerers.user.display_name);
+    var avatar = "<img src='" + answerers.user.profile_image + "' alt='" + answerers.user.display_name + "'>";
+    $(username).append(avatar);
+    var postCount = result.find('.postcount-number').text(answerers.post_count);
+    var userScore = result.find('.score-number').text(answerers.score);
+    return result;
+>>>>>>> gh-pages
 };
 
 
@@ -37,6 +54,10 @@ var showQuestion = function (question) {
 var showSearchResults = function (query, resultNum) {
     var results = resultNum + ' results for <strong>' + query + '</strong>';
     return results;
+<<<<<<< HEAD
+=======
+    //console.log(results);
+>>>>>>> gh-pages
 };
 
 // takes error string and turns it into displayable DOM element
@@ -57,6 +78,62 @@ var getUnanswered = function (tags) {
         order: 'desc',
         sort: 'creation'
     };
+<<<<<<< HEAD
+=======
+
+    $.ajax({
+            url: "http://api.stackexchange.com/2.2/questions/unanswered",
+            data: request,
+            dataType: "jsonp", //use jsonp to avoid cross origin issues
+            type: "GET",
+        })
+        .done(function (result) { //this waits for the ajax to return with a succesful promise object
+            var searchResults = showSearchResults(request.tagged, result.items.length);
+
+            $('.search-results').html(searchResults);
+            //$.each is a higher order function. It takes an array and a function as an argument.
+            //The function is executed once for each item in the array.
+            $.each(result.items, function (i, item) {
+                var question = showQuestion(item);
+                $('.results').append(question);
+            });
+        })
+        .fail(function (jqXHR, error) { //this waits for the ajax to return with an error promise object
+            var errorElem = showError(error);
+            $('.search-results').append(errorElem);
+        });
+};
+var getAnswerers = function (subject) {
+    var url = "http://api.stackexchange.com/2.2/tags/" + subject + "/top-answerers/all_time";
+    var request = {
+        site: 'stackoverflow'
+    };
+    $.ajax({
+            url: url,
+            data: request,
+            dataType: "jsonp", //use jsonp to avoid cross origin issues
+            type: "GET",
+        })
+        .done(function (result) { //this waits for the ajax to return with a succesful promise object
+            console.log(result.items);
+
+            var searchResults = showSearchResults(subject, result.items.length);
+
+            $('.search-results').html(searchResults);
+            $.each(result.items, function (i, item) {
+                var answerer = showAnswerers(item);
+                $('.answerers').append(answerer);
+                //console.log(item)
+                /*  var question = showQuestion(item);
+                  $('.results').append(question); */
+            });
+        })
+        .fail(function (jqXHR, error) { //this waits for the ajax to return with an error promise object
+            var errorElem = showError(error);
+            $('.search-results').append(errorElem);
+        });
+};
+>>>>>>> gh-pages
 
     $.ajax({
             url: "http://api.stackexchange.com/2.2/questions/unanswered",
@@ -91,4 +168,13 @@ $(document).ready(function () {
         var tags = $(this).find("input[name='tags']").val();
         getUnanswered(tags);
     });
+<<<<<<< HEAD
+=======
+    $('.inspiration-getter').submit(function (event) {
+        event.preventDefault();
+        $('.results').html('');
+        var subject = $(this).find("input[name='answerers']").val();
+        getAnswerers(subject);
+    });
+>>>>>>> gh-pages
 });
