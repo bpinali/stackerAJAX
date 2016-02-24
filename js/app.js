@@ -29,8 +29,6 @@ var showQuestion = function (question) {
     );
 
     return result;
-<<<<<<< HEAD
-=======
 };
 
 var showAnswerers = function (answerers) {
@@ -45,7 +43,6 @@ var showAnswerers = function (answerers) {
     var postCount = result.find('.postcount-number').text(answerers.post_count);
     var userScore = result.find('.score-number').text(answerers.score);
     return result;
->>>>>>> gh-pages
 };
 
 
@@ -54,10 +51,7 @@ var showAnswerers = function (answerers) {
 var showSearchResults = function (query, resultNum) {
     var results = resultNum + ' results for <strong>' + query + '</strong>';
     return results;
-<<<<<<< HEAD
-=======
     //console.log(results);
->>>>>>> gh-pages
 };
 
 // takes error string and turns it into displayable DOM element
@@ -78,8 +72,6 @@ var getUnanswered = function (tags) {
         order: 'desc',
         sort: 'creation'
     };
-<<<<<<< HEAD
-=======
 
     $.ajax({
             url: "http://api.stackexchange.com/2.2/questions/unanswered",
@@ -133,31 +125,7 @@ var getAnswerers = function (subject) {
             $('.search-results').append(errorElem);
         });
 };
->>>>>>> gh-pages
 
-    $.ajax({
-            url: "http://api.stackexchange.com/2.2/questions/unanswered",
-            data: request,
-            dataType: "jsonp", //use jsonp to avoid cross origin issues
-            type: "GET",
-        })
-        .done(function (result) { //this waits for the ajax to return with a succesful promise object
-            var searchResults = showSearchResults(request.tagged, result.items.length);
-
-            $('.search-results').html(searchResults);
-            //$.each is a higher order function. It takes an array and a function as an argument.
-            //The function is executed once for each item in the array.
-            $.each(result.items, function (i, item) {
-                var question = showQuestion(item);
-                $('.results').append(question);
-            });
-        })
-        .fail(function (jqXHR, error) { //this waits for the ajax to return with an error promise object
-            var errorElem = showError(error);
-            $('.search-results').append(errorElem);
-        });
-};
-//change
 
 $(document).ready(function () {
     $('.unanswered-getter').submit(function (e) {
@@ -168,13 +136,10 @@ $(document).ready(function () {
         var tags = $(this).find("input[name='tags']").val();
         getUnanswered(tags);
     });
-<<<<<<< HEAD
-=======
     $('.inspiration-getter').submit(function (event) {
         event.preventDefault();
         $('.results').html('');
         var subject = $(this).find("input[name='answerers']").val();
         getAnswerers(subject);
     });
->>>>>>> gh-pages
 });
