@@ -31,27 +31,12 @@ var showQuestion = function (question) {
     return result;
 };
 
-var showAnswerers = function (answerers) {
-    console.log(answerers);
-    var result = $('.templates .answerers').clone();
-
-    var username = result.find('.username-text a')
-        .attr('href', answerers.user.link)
-        .text(answerers.user.display_name);
-    var avatar = "<img src='" + answerers.user.profile_image + "' alt='" + answerers.user.display_name + "'>";
-    $(username).append(avatar);
-    var postCount = result.find('.postcount-number').text(answerers.post_count);
-    var userScore = result.find('.score-number').text(answerers.score);
-    return result;
-};
-
 
 // this function takes the results object from StackOverflow
 // and returns the number of results and tags to be appended to DOM
 var showSearchResults = function (query, resultNum) {
     var results = resultNum + ' results for <strong>' + query + '</strong>';
     return results;
-    //console.log(results);
 };
 
 // takes error string and turns it into displayable DOM element
@@ -73,11 +58,11 @@ var getUnanswered = function (tags) {
         sort: 'creation'
     };
 
-    $.ajax({
+    var result = $.ajax({
             url: "http://api.stackexchange.com/2.2/questions/unanswered",
             data: request,
             dataType: "jsonp", //use jsonp to avoid cross origin issues
-            type: "GET",
+            type: "GET"
         })
         .done(function (result) { //this waits for the ajax to return with a succesful promise object
             var searchResults = showSearchResults(request.tagged, result.items.length);
@@ -100,24 +85,21 @@ var getAnswerers = function (subject) {
     var request = {
         site: 'stackoverflow'
     };
-    $.ajax({
-            url: url,
-            data: request,
-            dataType: "jsonp", //use jsonp to avoid cross origin issues
-            type: "GET",
-        })
-        .done(function (result) { //this waits for the ajax to return with a succesful promise object
-            console.log(result.items);
+    var result = $.ajax({
+        url: url,
+        data: request,
+        dataType: "jsonp", //use jsonp to avoid cross origin issues
+        type: "GET"
+    })
+
+    .done(function (result) { //this waits for the ajax to return with a succesful promise object
 
             var searchResults = showSearchResults(subject, result.items.length);
 
             $('.search-results').html(searchResults);
-            $.each(result.items, function (i, item) {
+            $.each(result.items, function (index, item) {
                 var answerer = showAnswerers(item);
-                $('.answerers').append(answerer);
-                //console.log(item)
-                /*  var question = showQuestion(item);
-                  $('.results').append(question); */
+                $('.results').append(answerer);
             });
         })
         .fail(function (jqXHR, error) { //this waits for the ajax to return with an error promise object
@@ -126,10 +108,22 @@ var getAnswerers = function (subject) {
         });
 };
 
+var showAnswerers = function (item) {
+    var result = $('.templates .responders').clone();
+
+    var username = result.find('.username-text a')
+        .attr('href', item.user.link)
+        .text(item.user.display_name);
+    var avatar = "<img src='" + item.user.profile_image + "' alt='" + item.user.display_name + "'>";
+    $(username).append(avatar);
+    var postCount = result.find('.postcount-number').text(item.post_count);
+    var userScore = result.find('.score-number').text(item.score);
+    return result;
+};
 
 $(document).ready(function () {
-    $('.unanswered-getter').submit(function (e) {
-        e.preventDefault();
+    $('.unanswered-getter').submit(function (event) {
+        event.preventDefault();
         // zero out results if previous search has run
         $('.results').html('');
         // get the value of the tags the user submitted
