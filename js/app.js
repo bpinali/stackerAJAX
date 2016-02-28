@@ -32,7 +32,7 @@ var showQuestion = function (question) {
 };
 
 var showAnswerers = function (answerers) {
-    console.log(answerers);
+    //console.log(answerers);
     var result = $('.templates .answerers').clone();
 
     var username = result.find('.username-text a')
@@ -73,11 +73,11 @@ var getUnanswered = function (tags) {
         sort: 'creation'
     };
 
-    $.ajax({
+    var result = $.ajax({
             url: "http://api.stackexchange.com/2.2/questions/unanswered",
             data: request,
             dataType: "jsonp", //use jsonp to avoid cross origin issues
-            type: "GET",
+            type: "GET"
         })
         .done(function (result) { //this waits for the ajax to return with a succesful promise object
             var searchResults = showSearchResults(request.tagged, result.items.length);
@@ -100,20 +100,21 @@ var getAnswerers = function (subject) {
     var request = {
         site: 'stackoverflow'
     };
-    $.ajax({
+    var result = $.ajax({
             url: url,
             data: request,
             dataType: "jsonp", //use jsonp to avoid cross origin issues
-            type: "GET",
+            type: "GET"
         })
         .done(function (result) { //this waits for the ajax to return with a succesful promise object
-            console.log(result.items);
+            console.log(result);
 
             var searchResults = showSearchResults(subject, result.items.length);
 
             $('.search-results').html(searchResults);
             $.each(result.items, function (i, item) {
                 var answerer = showAnswerers(item);
+                //console.log(answerer);
                 $('.answerers').append(answerer);
                 //console.log(item)
                 /*  var question = showQuestion(item);
@@ -128,8 +129,8 @@ var getAnswerers = function (subject) {
 
 
 $(document).ready(function () {
-    $('.unanswered-getter').submit(function (e) {
-        e.preventDefault();
+    $('.unanswered-getter').submit(function (event) {
+        event.preventDefault();
         // zero out results if previous search has run
         $('.results').html('');
         // get the value of the tags the user submitted
